@@ -50,8 +50,10 @@ The adoption center fetches the latest Art DeCC0 listings every minute from MOCA
 
 ## Prerequisites
 
-- Node.js (v12 or higher)
+- Node.js v22.18.0 (specified in `.nvmrc`)
 - npm (comes with Node.js)
+
+**Note:** This project requires Node.js version 22.18.0. If you use nvm, you can run `nvm use` in the project directory to switch to the correct version.
 
 ## Installation
 
