@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Decc0s Adoption Center</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="/img/logo.png" alt="Art Decc0s Logo" class="logo">
+            <div class="header-text">
+                <h1>Adoption Center</h1>
+                <p>Meet dank Art Decc0s and bring them home</p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="gallery-container">
+            <div class="nav-arrow left">&#8249;</div>
+            <div class="gallery" id="artworkGallery">
+                <!-- Artworks will be loaded here dynamically -->
+            </div>
+            <div class="nav-arrow right">&#8250;</div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Wanna adopt more than one? Wanna sweep the floor? Head over to <a href="https://opensea.io/collection/art-decc0s" target="_blank">Opensea</a> and grab a bunch!</p>
+    </footer>
+
+    <!-- Modal for artwork details -->
+    <div id="artworkModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h2 id="modalArtworkTitle"></h2>
+                    <p id="modalArtworkId"></p>
+                </div>
+                <div class="modal-price" id="modalArtworkPriceHeader"></div>
+                <div class="modal-buttons">
+                    <a href="https://adoption.deploy.qwellco.de/" target="_blank" class="btn" id="chatBtn">Chat</a>
+                    <a href="#" target="_blank" class="btn" id="buyBtn">Buy</a>
+                </div>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img id="modalArtworkImage" src="" alt="">
+                <div class="artwork-details">
+                    <!-- Description section -->
+                    <h3>Description</h3>
+                    <p class="description" id="modalArtworkDescription"></p>
+                    
+                    <!-- Confession section -->
+                    <h3>Confession</h3>
+                    <p class="confession" id="modalArtworkConfession"></p>
+                    
+                    <!-- Codex link -->
+                    <div class="codex-link-container">
+                        <a href="#" target="_blank" class="btn codex-link" id="codexLink">If you wanna learn more? Explore this DeCC0 in the Codex</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
