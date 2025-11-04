@@ -27,7 +27,7 @@ function convertPrice(apiPrice) {
 // Function to fetch codex data for a given id
 async function fetchCodexData(id) {
   try {
-    const response = await fetch(`https://api-staging.moca.qwellco.de/codex/${id}`);
+    const response = await fetch(`https://api.moca.qwellco.de/codex/${id}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
