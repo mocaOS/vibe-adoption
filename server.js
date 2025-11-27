@@ -9,109 +9,51 @@ const PORT = process.env.PORT || 8081;
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Function to convert price from API format to ETH string
-function convertPrice(apiPrice) {
-  const { value, decimals } = apiPrice;
-  // Convert the value to ETH by dividing by 10^decimals
-  // Since these are very large numbers, we need to handle them as strings
-  const divisor = Math.pow(10, decimals);
-  
-  // Convert value to a number and divide by the divisor
-  const ethValue = parseInt(value) / divisor;
-  
-  // Format to a reasonable number of decimal places
-  // Based on the example, we want something like 0.0136 ETH
-  return ethValue.toFixed(4);
+// Helper function to extract first element from array or return as-is
+function extractValue(value) {
+  return Array.isArray(value) ? value[0] : value;
 }
 
-// Function to fetch codex data for a given id
-async function fetchCodexData(id) {
-  try {
-    const response = await fetch(`https://api.moca.qwellco.de/codex/${id}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(`Error fetching codex data for id ${id}:`, error);
-    return null;
-  }
+// Helper function to build Directus asset URL
+function buildAssetUrl(fileId) {
+  if (!fileId) return '';
+  return `https://api.decc0s.com/assets/${fileId}`;
 }
 
-// Function to enrich artwork data with codex information
-async function enrichArtworkData(artwork) {
-  try {
-    const codexData = await fetchCodexData(artwork.id);
-    if (codexData && codexData.success && codexData.data) {
-      // Replace title with name from codex
-      if (codexData.data.name) {
-        artwork.title = Array.isArray(codexData.data.name) 
-          ? codexData.data.name[0] 
-          : codexData.data.name;
-      }
-      
-      // Replace description with biography from codex
-      if (codexData.data.description) {
-        artwork.description = Array.isArray(codexData.data.description) 
-          ? codexData.data.description[0] 
-          : codexData.data.description;
-      }
-      
-      // Add confession data from codex if available
-      if (codexData.data.confession) {
-        artwork.confession = Array.isArray(codexData.data.confession) 
-          ? codexData.data.confession[0] 
-          : codexData.data.confession;
-      }
-      
-      // Replace image with thumbnail from codex
-      if (codexData.data.thumbnail) {
-        artwork.image = codexData.data.thumbnail;
-      }
-    }
-    return artwork;
-  } catch (error) {
-    console.error(`Error enriching artwork data for id ${artwork.id}:`, error);
-    return artwork;
-  }
-}
-
-// API endpoint to get artworks data
+// API endpoint to get artworks data - single optimized Codex API call
 app.get('/api/artworks', async (req, res) => {
   try {
-    // Fetch data from the listings API directly
-    console.log('Fetching data from listings API...');
-    const response = await fetch('https://api-staging.moca.qwellco.de/listings');
-    const apiData = await response.json();
+    // Fetch the cheapest 10 items directly from Codex API
+    // Filter for items with prices, sort by price ascending, limit to 10
+    const filter = encodeURIComponent(JSON.stringify({ price: { _nnull: true } }));
+    const fields = 'id,name,description,confession,thumbnail,price';
+    const codexUrl = `https://api.decc0s.com/items/codex?filter=${filter}&fields=${fields}&sort=price&limit=10`;
     
-    if (!apiData.success) {
-      throw new Error('API request was not successful');
+    console.log('Fetching cheapest 10 artworks from Codex API...');
+    const codexResponse = await fetch(codexUrl);
+    const codexData = await codexResponse.json();
+    
+    if (!codexData.data) {
+      throw new Error('Codex API request failed');
     }
     
-    console.log(`Received ${apiData.data.length} artworks from API`);
+    console.log(`Retrieved ${codexData.data.length} artworks from Codex API`);
     
-    // Transform API data to match artworks.json structure
-    let artworks = apiData.data.map(item => {
+    // Transform codex data to artwork format
+    const artworks = codexData.data.map(item => {
       return {
-        id: item.tokenId,
-        title: "",  // Will be populated from codex
-        price: convertPrice(item.price),
-        image: "",  // Will be populated from codex
-        description: "",  // Will be populated from codex
-        confession: ""  // Will be populated from codex
+        id: item.id.toString(),
+        title: extractValue(item.name) || `Art DeCC0 #${item.id}`,
+        price: item.price || '0.0000',
+        image: buildAssetUrl(item.thumbnail),
+        description: extractValue(item.description) || '',
+        confession: extractValue(item.confession) || ''
       };
     });
     
-    console.log('Enriching artworks with codex data...');
-    // Enrich each artwork with codex data
-    const enrichedArtworks = [];
-    for (const artwork of artworks) {
-      const enrichedArtwork = await enrichArtworkData(artwork);
-      enrichedArtworks.push(enrichedArtwork);
-    }
+    console.log(`Successfully processed ${artworks.length} artworks`);
+    res.json(artworks);
     
-    res.json(enrichedArtworks);
   } catch (error) {
     console.error('Error fetching and processing artworks:', error);
     res.status(500).json({ error: 'Failed to load artworks data' });

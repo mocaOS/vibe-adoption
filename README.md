@@ -1,105 +1,136 @@
 # Art DeCC0 Adoption Center
 
-The Art DeCC0 Adoption Center is designed to help you find the perfect Art DeCC0 companion. Browse through currently available Art DeCC0s, learn about their unique characteristics, chat with them to get to know their personality, and when you've found the right match, bring them home with the buy button.
+The Art DeCC0 Adoption Center is designed to help you find the perfect Art DeCC0 companion. Browse through currently available Art DeCC0s, learn about their unique characteristics, and when you've found the right match, bring them home.
 
 Whether you're a seasoned collector or new to the world of crypto art, our adoption center makes it easy to discover affordable Art DeCC0s that speak to you personally.
 
 ## How It Works
 
-1. **Meet** - Browse through the gallery of currently available Art DeCC0s
-2. **Learn** - Click on any Art DeCC0 to see detailed information about its unique traits and characteristics
-3. **Chat** - Use the chat button to interact with an Art DeCC0 and get to know its personality
-4. **Buy** - When you've found the perfect companion, hit the buy button to bring them home
+1. **Browse** - Scroll through the gallery of the 10 cheapest currently available Art DeCC0s
+2. **Learn** - Click on any Art DeCC0 to see detailed information including their biography and confession
+3. **Explore** - Visit the Codex to learn more about each character's rich backstory
+4. **Adopt** - When you've found the perfect companion, hit the buy button to bring them home
 
 ## Features
 
-- Real-time artwork data aggregation from MOCA's APIs
-- Dynamic pricing information for each Art DeCC0
-- Detailed artwork information including titles and descriptions
-- Horizontal scrolling gallery with smooth navigation
-- Dark mode interface for optimal viewing
-- Responsive design that works on all device sizes
-- Detailed modal view for each Art DeCC0
-- "Chat" and "Buy" buttons linking to museumofcryptoart.com
+- **Real-time Data** - Fetches the 10 cheapest listings from MOCA's marketplace
+- **Rich Metadata** - Integrates with the [MOCA Codex API](https://github.com/mocaOS/codex) for detailed character information
+- **Optimized Performance** - Single API call for all artwork data with sorting and filtering
+- **Beautiful Gallery** - Horizontal scrolling with smooth navigation and momentum
+- **Dark Mode Interface** - Optimized for comfortable viewing
+- **Detailed Modal View** - Full character biography, confession, and artwork details
+- **Direct Links** - Quick access to Codex profiles and marketplace listings
 
 ## About Art DeCC0s
 
-Art DeCC0s are unique digital avatars that represent the intersection of crypto art history and cutting-edge AI generation. Each DeCC0 is a 1-of-1 piece created through a complex generative process that combines four distinct DNA traits:
+Art DeCC0s are unique digital avatars that represent the intersection of crypto art history and cutting-edge AI generation. Each DeCC0 is a 1-of-1 piece with a rich backstory, personality, and visual identity.
 
-1. **Lineage** - Historical art collectors and patrons that shaped crypto art culture
-2. **Memetics** - Influential memes and iconic crypto art projects
-3. **Artist Self-Portraits** - Famous self-portraits from art history to contemporary crypto artists
-4. **MOCA Collection Works** - Pieces from MOCA's extensive crypto art collections
+The collection features 10,000 unique characters, each with:
+- **Detailed Biography** - Background story and personality traits
+- **Personal Confession** - First-person narrative revealing their inner world
+- **Visual Identity** - Unique character design on custom background
+- **Cultural Heritage** - Diverse global influences and philosophical perspectives
 
-The collection features 10,000 unique characters placed on 10,000 unique backgrounds representing 16 different artistic styles from cave paintings to cubism.
+Learn more about the Art DeCC0 collection and explore the full Codex at [docs.decc0s.com](https://docs.decc0s.com).
 
-## Enhanced Navigation
+## Navigation
 
-- **Mouse Wheel Scrolling**: Scroll horizontally using the mouse wheel
-- **Arrow Key Navigation**: Use left/right arrow keys to navigate
-- **Navigation Arrows**: Click the directional arrows on both sides of the gallery
-- **Touch Scrolling**: Natural touch scrolling on mobile devices
+- **Mouse Wheel Scrolling** - Scroll horizontally using the mouse wheel with momentum
+- **Arrow Key Navigation** - Use left/right arrow keys to navigate
+- **Navigation Arrows** - Click the directional arrows on both sides of the gallery
+- **Touch Scrolling** - Natural touch scrolling on mobile devices
 
-## Real-time Data Updates
+## Technical Architecture
 
-The adoption center fetches the latest Art DeCC0 listings every minute from MOCA's APIs, ensuring you always have access to the most current available artworks. Data is aggregated from multiple sources:
+### API Integration
 
-1. **Listings API** - Updated every minute with the latest available Art DeCC0s
-2. **Codex API** - Provides detailed artwork information including titles, descriptions, and images
-3. **Real-time Aggregation** - Data is processed and combined to create complete artwork profiles
+This application uses the **MOCA Codex API** (`https://api.decc0s.com/items/codex`) to provide real-time marketplace data:
 
-## Prerequisites
+- **Directus-based API** - Powerful headless CMS with advanced querying capabilities
+- **Single Optimized Query** - Fetches the 10 cheapest listings with all metadata in one call
+- **Built-in Filtering** - `filter[price][_nnull]=true` to get only listed items
+- **Native Sorting** - `sort=price` to get cheapest items first
+- **Field Selection** - `fields=id,name,description,confession,thumbnail,price` for minimal payload
+- **Documentation**: [docs.decc0s.com](https://docs.decc0s.com)
+- **Source Code**: [github.com/mocaOS/codex](https://github.com/mocaOS/codex)
+
+### Performance Optimization
+
+The application uses an ultra-efficient data fetching strategy:
+- **1 Total API Call** - Single request gets everything (vs 11+ in previous implementations)
+- **Server-Side Filtering** - Database-level filtering for items with prices
+- **Server-Side Sorting** - Database-level sorting by price (ascending)
+- **Minimal Payload** - Only fetches the exact fields needed
+- **No Post-Processing** - Data comes pre-sorted and filtered from the API
+
+### Data Flow
+
+```
+Codex API (filter + sort + limit) → Enriched Artworks → Client
+           ↓                              ↓
+    Full metadata                  Gallery display
+    (10 cheapest items)
+```
+
+## Getting Started
+
+### Prerequisites
 
 - Node.js v22.18.0 (specified in `.nvmrc`)
 - npm (comes with Node.js)
 
-**Note:** This project requires Node.js version 22.18.0. If you use nvm, you can run `nvm use` in the project directory to switch to the correct version.
+**Note:** This project requires Node.js version 22.18.0. If you use nvm, run `nvm use` in the project directory.
 
-## Installation
+### Installation
 
-1. Clone the repository or navigate to the project directory
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+# Clone the repository
+git clone <repository-url>
+cd vibe-adoption
 
-## Running the Application
+# Install dependencies
+npm install
+```
 
-### Production Mode
-To start the application in production mode:
+### Running the Application
+
+**Production Mode:**
 ```bash
 npm start
 ```
 
-The application will be available at http://localhost:8081
-
-### Development Mode
-To start the application in development mode with auto-reload:
+**Development Mode** (with auto-reload):
 ```bash
 npm run dev
 ```
 
+The application will be available at `http://localhost:8081`
+
 ## Project Structure
 
-- `server.js` - Main server file that fetches and aggregates Art DeCC0 data from MOCA's external APIs
-- `public/` - Static files directory
-  - `index.html` - Main gallery page
-  - `styles.css` - Styling for the gallery (dark mode)
-  - `script.js` - Client-side JavaScript with enhanced scrolling
-  - `img/` - Artwork images
+```
+vibe-adoption/
+├── server.js           # Express server with optimized API integration
+├── public/
+│   ├── index.html      # Main gallery page
+│   ├── styles.css      # Dark mode styling
+│   ├── script.js       # Client-side gallery interactions
+│   └── img/            # Static assets
+├── package.json        # Dependencies and scripts
+└── llm.json           # OpenAPI documentation for Codex API
+```
 
-## How Art DeCC0s Are Created
+## API Documentation
 
-Art DeCC0s were created through an intensive 6-month process involving:
+For detailed information about the MOCA Codex API:
+- **Documentation**: [docs.decc0s.com](https://docs.decc0s.com)
+- **Source Code**: [github.com/mocaOS/codex](https://github.com/mocaOS/codex)
+- **OpenAPI Spec**: See `llm.json` in this repository
 
-- Over 300,000 AI-generated characters
-- 10,000 unique backgrounds across 16 artistic styles
-- Complex DNA combination system using four distinct trait categories
-- Extensive curation process to select the final 10,000 pieces
-- Technical innovation in AI generation and workflow automation
+## Contributing
 
-Each Art DeCC0 is truly unique, with no two pieces looking exactly alike even when sharing the same DNA traits.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Customization
+## License
 
-To change the links for the "Chat" and "Buy" buttons, modify the `href` attributes in `public/index.html`.
+This project is open source and available under the MIT License.
