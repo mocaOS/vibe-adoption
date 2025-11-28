@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalId.textContent = `Art DeCC0 #${artwork.id}`;
         modalImage.src = artwork.image;
         modalImage.alt = artwork.title;
-        modalPriceHeader.textContent = `${artwork.price} ETH`;
+        modalPriceHeader.textContent = `${artwork.price}`;
         modalDescription.textContent = artwork.description || 'No description available.';
 
         // Display confession if available
