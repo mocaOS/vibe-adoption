@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="artwork-info">
                         <h3>${artwork.title}</h3>
                         <p>Art DeCC0 #${artwork.id}</p>
-                        <p class="artwork-price">${artwork.price} ETH</p>
+                        <p class="artwork-price">${artwork.price}</p>
                     </div>
                 `;
 
